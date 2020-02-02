@@ -1,0 +1,7 @@
+canvas {
+    display: block; /* fix necessary to remove space at bottom of canvas */
+}
+body {
+  margin: 0 auto;
+  /* font-family: 'Open Sans', sans-serif; */
+}
