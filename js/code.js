@@ -25,7 +25,7 @@ function main() {
     const near = 0.1;
     const far = 500;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(40, 0, 0);
+    camera.position.set(30, 0, 0);
     camera.up.set(0, 0, 1);
     camera.lookAt(0, 0, 0);
     scene.add(camera);
@@ -42,7 +42,7 @@ function main() {
       const color = 0xFFFFFF;
       const intensity = 1;
       const light = new THREE.DirectionalLight(color, intensity);
-      light.position.set(-1, 2, 4);
+      light.position.set(4, 2, -4);
       scene.add(light);
     }
 
@@ -181,7 +181,6 @@ function main() {
         this.pz = this.p0 * Math.cos(this.theta*Math.PI/180.0);
         this.LC = 20.0;
         this.min_length = 10.0;
-        this.show_
       };
       var conf = new ConfDipole();
 
@@ -229,6 +228,7 @@ function main() {
         conf.pz = conf.p0 * Math.cos(conf.theta*Math.PI/180.0);
         update_fieldlines();
       });
+      gui.add(conf, "LC", 5.0, 40.0, 0.1).onChange(update_fieldlines);
       gui.add(conf, "min_length", 1.0, 40.0, 0.01).onChange(update_fieldlines);
       conf.show_closed = true;
       gui.add(conf, "show_closed");
@@ -313,6 +313,7 @@ function main() {
       gui.add(conf, "q_offset_x", -1.0, 1.0, 0.01).onChange(update_fieldlines);
       gui.add(conf, "q_offset_y", -1.0, 1.0, 0.01).onChange(update_fieldlines);
       gui.add(conf, "q_offset_z", -1.0, 1.0, 0.01).onChange(update_fieldlines);
+      gui.add(conf, "LC", 5.0, 40.0, 0.1).onChange(update_fieldlines);
       gui.add(conf, "min_length", 1.0, 40.0, 0.01).onChange(update_fieldlines);
       conf.show_closed = true;
       gui.add(conf, "show_closed");
@@ -328,6 +329,115 @@ function main() {
       gui.add(conf, "reseed");
 
       var customContainer = document.getElementById('quadrupole-gui');
+      customContainer.appendChild(gui.domElement);
+      return (time, rect) => {
+        // mesh.rotation.y = time * .1;
+        camera.aspect = rect.width / rect.height;
+        camera.updateProjectionMatrix();
+        // controls.handleResize();
+        controls.update();
+        closed_lines.visible = conf.show_closed;
+        renderer.render(scene, camera);
+      };
+    },
+    'pulsar': (elem) => {
+      const {scene, camera, controls} = makeScene(elem);
+      var n_seed = 8000;
+      var ConfPSR = function() {
+        this.p0 = 1.00;
+        this.theta = 80.0;
+        this.px = 0.0;
+        this.py = this.p0 * Math.sin(this.theta*Math.PI/180.0);
+        this.pz = this.p0 * Math.cos(this.theta*Math.PI/180.0);
+        this.q11 = 0.8;
+        this.q12 = 0.0;
+        this.q13 = 0.0;
+        this.q22 = -0.6;
+        this.q23 = -2.0;
+        this.q_offset_x = 0.0;
+        this.q_offset_y = 0.0;
+        this.q_offset_z = -0.4;
+        this.LC = 20.0;
+        this.min_length = 10.0;
+      };
+      var conf = new ConfPSR();
+
+      var radius = 1.0;
+      var geometry = new THREE.SphereGeometry(radius, 64, 64);
+      var material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa });
+      var star = new THREE.Mesh(geometry, material);
+      scene.add(star);
+      var p0s = gen_seeds(n_seed);
+
+      var open_lines = new THREE.Group();
+      var closed_lines = new THREE.Group();
+      function update_fieldlines() {
+        remove_all_field_lines(open_lines, closed_lines);
+        add_all_field_lines(p0s, 0.03, conf, function(p) {
+          // return dipole_field(conf.px, conf.py, conf.pz, p.x, p.y, p.z);
+          var f = dipole_field(conf.px, conf.py, conf.pz, p.x, p.y, p.z);
+          f.add(quadrupole_field(conf.q11, conf.q12, conf.q13, conf.q22,
+                                 conf.q23, p.x, p.y, p.z, conf));
+          return f;
+        }, open_lines, closed_lines);
+      }
+
+      update_fieldlines();
+      scene.add(open_lines);
+      scene.add(closed_lines);
+
+      var axis = new THREE.Geometry();
+      axis.vertices.push(new THREE.Vector3(0, 0, -100));
+      axis.vertices.push(new THREE.Vector3(0, 0, 100));
+      var z_line = new THREE.Line(axis, new THREE.LineBasicMaterial({
+        color: 0x8080aa,
+        linewidth: 2.5,
+      }));
+      scene.add(z_line);
+
+      var gui = new GUI({ autoPlace: false });
+      // var gui = new GUI();
+      var f_dipole = gui.addFolder("dipole");
+      f_dipole.add(conf, "px", -1.0, 1.0, 0.001).listen().onChange(update_fieldlines);
+      f_dipole.add(conf, "py", -1.0, 1.0, 0.001).listen().onChange(update_fieldlines);
+      f_dipole.add(conf, "pz", -1.0, 1.0, 0.001).listen().onChange(update_fieldlines);
+      f_dipole.add(conf, "p0", 0.0, 1.0, 0.001).onChange(function() {
+        conf.py = conf.p0 * Math.sin(conf.theta*Math.PI/180.0);
+        conf.pz = conf.p0 * Math.cos(conf.theta*Math.PI/180.0);
+        update_fieldlines();
+      });
+      f_dipole.add(conf, "theta", 0.0, 180.0, 1.0).onChange(function() {
+        conf.py = conf.p0 * Math.sin(conf.theta*Math.PI/180.0);
+        conf.pz = conf.p0 * Math.cos(conf.theta*Math.PI/180.0);
+        update_fieldlines();
+      });
+      f_dipole.close();
+      var f_quad = gui.addFolder("quadrupole");
+      f_quad.add(conf, "q11", -2.0, 2.0, 0.01).onChange(update_fieldlines);
+      f_quad.add(conf, "q12", -2.0, 2.0, 0.01).onChange(update_fieldlines);
+      f_quad.add(conf, "q13", -2.0, 2.0, 0.01).onChange(update_fieldlines);
+      f_quad.add(conf, "q22", -2.0, 2.0, 0.01).onChange(update_fieldlines);
+      f_quad.add(conf, "q23", -2.0, 2.0, 0.01).onChange(update_fieldlines);
+      f_quad.add(conf, "q_offset_x", -1.0, 1.0, 0.01).onChange(update_fieldlines);
+      f_quad.add(conf, "q_offset_y", -1.0, 1.0, 0.01).onChange(update_fieldlines);
+      f_quad.add(conf, "q_offset_z", -1.0, 1.0, 0.01).onChange(update_fieldlines);
+      f_quad.close();
+      gui.add(conf, "LC", 5.0, 40.0, 0.1).onChange(update_fieldlines);
+      gui.add(conf, "min_length", 1.0, 40.0, 0.01).onChange(update_fieldlines);
+      conf.show_closed = false;
+      gui.add(conf, "show_closed");
+      conf.resetView = function() {
+        // camera.position.set(80, 0, 0);
+        controls.reset();
+      }
+      gui.add(conf, "resetView");
+      conf.reseed = function() {
+        p0s = gen_seeds(n_seed);
+        update_fieldlines();
+      }
+      gui.add(conf, "reseed");
+
+      var customContainer = document.getElementById('pulsar-gui');
       customContainer.appendChild(gui.domElement);
       return (time, rect) => {
         // mesh.rotation.y = time * .1;

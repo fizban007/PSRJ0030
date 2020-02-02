@@ -11,18 +11,25 @@
 *[data-diagram] {
   display: inline-block;
   width: 50em;
-  height: 30em;
+  height: 25em;
   border: 1px solid black;
   position: relative;
 }
 .left {
-  float: left;
+  /* float: left; */
+  display: inline-block;
   margin-right: .25em;
   /* width: inherit; */
-  position: relative;
+  /* position: relative; */
+  /* left: 50%; */
+  /* right: 50%; */
   /* top: 0; */
 }
 .right {
   float: right;
   margin-left: .25em;
+}
+.widget {
+  margin-left: .25em;
+  margin-right: .25em;
 }
