@@ -79,16 +79,12 @@ function main() {
     positions.push(p0.x, p0.y, p0.z);
     var p = new THREE.Vector3();
     p.copy(p0);
-    // var f_dipole = dipole_field(conf.px, conf.py, conf.pz, p.x, p.y, p.z);
-    // var f_quad = quadrupole_field(conf.q11, conf.q12, conf.q13, conf.q22, conf.q23,
-    //                             p.x, p.y, p.z, conf.q_offset_z);
-    // f_dipole.add(f_quad);
+
     var f0 = field(p);
     var sign = 1.0;
     if (f0.dot(p) < 0.0) {
       sign = -1.0;
     }
-    // console.log("p0 is", p0);
     var g = new LineGeometry();
     var len = dl;
     var open = false;
@@ -99,11 +95,11 @@ function main() {
       if (p.lengthSq() < 1.0) {
         break;
       }
+      // var r = p.x*p.x+p.y*p.y
       if (p.x*p.x+p.y*p.y > conf.LC * conf.LC) {
         open = true;
         break;
       }
-      // g.vertices.push(p);
       positions.push(p.x, p.y, p.z);
       len += dl;
     }
@@ -397,7 +393,7 @@ function main() {
 
       var gui = new GUI({ autoPlace: false });
       // var gui = new GUI();
-      var f_dipole = gui.addFolder("dipole");
+      var f_dipole = gui.addFolder("Dipole");
       f_dipole.add(conf, "px", -1.0, 1.0, 0.001).listen().onChange(update_fieldlines);
       f_dipole.add(conf, "py", -1.0, 1.0, 0.001).listen().onChange(update_fieldlines);
       f_dipole.add(conf, "pz", -1.0, 1.0, 0.001).listen().onChange(update_fieldlines);
@@ -412,7 +408,7 @@ function main() {
         update_fieldlines();
       });
       f_dipole.close();
-      var f_quad = gui.addFolder("quadrupole");
+      var f_quad = gui.addFolder("Quadrupole");
       f_quad.add(conf, "q11", -2.0, 2.0, 0.01).onChange(update_fieldlines);
       f_quad.add(conf, "q12", -2.0, 2.0, 0.01).onChange(update_fieldlines);
       f_quad.add(conf, "q13", -2.0, 2.0, 0.01).onChange(update_fieldlines);

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Pulsar Visualizations</title>
-    <link rel="stylesheet" type="text/css" href="css/org.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="css/org.min.css"> -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -16,30 +16,33 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> </head>
   <body>
     <canvas id="c"></canvas>
-    <div id="content">
-      <header>
-        <h1 class="title">Dipole and Quadrupole Magnetic Fields for Pulsars</h1>
-      </header>
+    <div class="content">
+      <h1 class="title">Dipole and Quadrupole Magnetic Fields for Pulsars</h1>
       <p>
         This is an interactive tool to help build intuition on how
         different components of dipole and quadrupole magnetic fields
         superimpose near the surface of a pulsar, and how the polar caps
-        change as a result.
+        change as a result. The default parameters of the dipole and
+        quadrupole fields superimpose to give the final fields in the
+        last panel.
       </p>
       <p>
-        All field lines are color-coded. Green lines are closed field
+        Magnetic field lines are color-coded. Green lines are closed field
         lines and light blue one are open. We define open field lines as
         those reaching the light cylinder and beyond. One can adjust the
         size of the light cylinder by changing the parameter
-        <code>LC</code>. The star always has radius 1. Not all field
-        lines are shown. This is to improve performance of both
-        rendering and integration. To show more field lines, reduce the
+        <code>LC</code>. Field line integration stops when the
+        cylindrical radius reaches $R_\mathrm{LC}$. All
+        lengths are normalized to stellar radius, so the star always has
+        radius $1$. Not all field lines are shown. This is to improve
+        performance of both rendering and integration. To show more
+        field lines, reduce the
         <code>min_length</code> parameter.
       </p>
       <p>
         Here are the field lines of an inclined dipole. By default the
         dipole is inclined in the $yz$ plane. The default view is from the $x$ axis.
-        <div style="position: relative; width: inherit;">
+        <div class="container">
 	        <span data-diagram="dipole" class="widget"> </span>
           <div id="dipole-gui" style="position: absolute; top: 0em; right: 1em; z-index: 1;"></div>
         </div>
@@ -67,7 +70,10 @@
         \]
       </p>
       <p>
-        <div style="position: relative; width: inherit;">
+        The default view is again from the $x$ axis.
+      </p>
+      <p>
+        <div class="container">
 	        <span data-diagram="quadrupole" class="widget"></span>
           <div id="quadrupole-gui" style="position: absolute; top: 0em; right: 1em; z-index: 1;"></div>
         </div>
@@ -80,8 +86,8 @@
         the previous two widgets.
       </p>
       <p>
-        <div style="position: relative; width: inherit;">
-	        <span data-diagram="pulsar" class="left"></span>
+        <div class="container">
+	        <span data-diagram="pulsar" class="widget"></span>
           <div id="pulsar-gui" style="position: absolute; top: 0em; right: 1em; z-index: 1;"></div>
         </div>
       </p>
