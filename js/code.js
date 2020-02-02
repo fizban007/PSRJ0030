@@ -16,14 +16,16 @@ function main() {
     const fov = 45;
     const aspect = 2;  // the canvas default
     const near = 0.1;
-    const far = 5;
+    const far = 500;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 1, 2);
+    camera.position.set(40, 0, 0);
+    camera.up.set(0, 0, 1);
     camera.lookAt(0, 0, 0);
     scene.add(camera);
+    scene.background = new THREE.Color(0x000000);
 
     const controls = new TrackballControls(camera, elem);
-    controls.noZoom = true;
+    controls.noZoom = false;
     controls.noPan = true;
 
     {
@@ -37,15 +39,39 @@ function main() {
     return {scene, camera, controls};
   }
 
+function dipole_field(px, py, pz, x, y, z) {
+  var r = Math.sqrt(x*x + y*y + z*z);
+  var r5 = r*r*r*r*r;
+  return new THREE.Vector3((3.0*x*(py*y+pz*z)-px*(-2.0*x*x+y*y+z*z))/r5,
+                           (3.0*y*(px*x+pz*z)-py*(x*x-2.0*y*y+z*z))/r5,
+                           (3.0*z*(px*x+py*y)-pz*(x*x+y*y-2.0*z*z))/r5);
+}
+
+function quadrupole_field(q11, q12, q13, q22, q23, x, y, z) {
+  var r = Math.sqrt(x*x + y*y + z*z);
+  var r2 = r*r;
+  var r7 = r2*r2*r2*r;
+  return new THREE.Vector3(
+    (-2.0 * (q11*x + q12*y + q13*z) * r2 + 5.0*x*
+     (q11*x*x + 2.0*q12*x*y + q22*y*y + 2.0*(q13*x + q23*y)*z - (q11+q22)*z*z)) / r7,
+    (-2.0 * (q12*x + q22*y + q23*z) * r2 + 5.0*y*
+     (q11*x*x + 2.0*q12*x*y + q22*y*y + 2.0*(q13*x + q23*y)*z - (q11+q22)*z*z)) / r7,
+    (-2.0 * (q13*x + q23*y) * (x*x + y*y) +
+     ((7.0*q11 + 2.0*q22)*x*x + 10.0*q12*x*y + (2.0*q11 + 7.0*q22)*y*y)*z +
+     8.0*(q13*x + q23*y)*z*z - 3.0*(q11 + q22)*z*z*z) / r7);
+}
+
   const sceneInitFunctionsByName = {
     'box': (elem) => {
       const {scene, camera, controls} = makeScene(elem);
-      const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
-      const material = new THREE.MeshPhongMaterial({color: 'red'});
-      const mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
+      var radius = 1.0;
+      var geometry = new THREE.SphereGeometry(radius, 64, 64);
+      var material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa });
+      // var material = new THREE.MeshBasicMaterial({ color: 0xaaaaaa });
+      var star = new THREE.Mesh(geometry, material);
+      scene.add(star);
       return (time, rect) => {
-        mesh.rotation.y = time * .1;
+        // mesh.rotation.y = time * .1;
         camera.aspect = rect.width / rect.height;
         camera.updateProjectionMatrix();
         controls.handleResize();
@@ -55,18 +81,13 @@ function main() {
     },
     'pyramid': (elem) => {
       const {scene, camera, controls} = makeScene(elem);
-      const radius = .8;
-      const widthSegments = 4;
-      const heightSegments = 2;
-      const geometry = new THREE.SphereBufferGeometry(radius, widthSegments, heightSegments);
-      const material = new THREE.MeshPhongMaterial({
-        color: 'blue',
-        flatShading: true,
-      });
-      const mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
+      var radius = 1.0;
+      var geometry = new THREE.SphereGeometry(radius, 64, 64);
+      var material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa });
+      // var material = new THREE.MeshBasicMaterial({ color: 0xaaaaaa });
+      var star = new THREE.Mesh(geometry, material);
+      scene.add(star);
       return (time, rect) => {
-        mesh.rotation.y = time * .1;
         camera.aspect = rect.width / rect.height;
         camera.updateProjectionMatrix();
         controls.handleResize();
