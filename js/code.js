@@ -1,5 +1,7 @@
-import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r112/build/three.module.js';
-import {TrackballControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r112/examples/jsm/controls/TrackballControls.js';
+// import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r112/build/three.module.js';
+// import {TrackballControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r112/examples/jsm/controls/TrackballControls.js';
+import * as THREE from '../vendor/three.module.js'
+import {TrackballControls} from '../vendor/TrackballControls.js'
 
 function main() {
   const canvas = document.querySelector('#c');
