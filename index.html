@@ -10,16 +10,27 @@
     <canvas id="c"></canvas>
     <div id="content">
       <p>
-	<span data-diagram="box" class="left"></span>
-	I love boxes. Presents come in boxes.
-	When I find a new box I'm always excited to find out what's inside.
+        <div style="position: relative; width: inherit;">
+	        <span data-diagram="dipole" class="left"> </span>
+          <div id="dipole-gui" style="position: absolute; top: 0em; right: 1em; z-index: 1;"></div>
+        </div>
+	      I love boxes. Presents come in boxes.
+	      When I find a new box I'm always excited to find out what's inside.
       </p>
       <p>
-	<!-- <span id="pyramid" class="diagram right"></span> -->
-	<span data-diagram="pyramid" class="right"></span>
-	When I was a kid I dreamed of going on an expedition inside a pyramid
-	and finding a undiscovered tomb full of mummies and treasure.
+	      <!-- <span id="pyramid" class="diagram right"></span> -->
+        <div style="position: relative; width: inherit;">
+	        <span data-diagram="quadrupole" class="left"></span>
+          <div id="quadrupole-gui" style="position: absolute; top: 0em; right: 1em; z-index: 1;"></div>
+        </div>
+	      When I was a kid I dreamed of going on an expedition inside a pyramid
+	      and finding a undiscovered tomb full of mummies and treasure.
       </p>
+      <!-- <p> -->
+	    <!-- <span data-diagram="pulsar" class="left"></span> -->
+	    <!-- When I was a kid I dreamed of going on an expedition inside a pyramid -->
+	    <!-- and finding a undiscovered tomb full of mummies and treasure. -->
+      <!-- </p> -->
     </div>
     <script type="module" src="js/code.js"></script>
   </body>
