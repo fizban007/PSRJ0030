@@ -2,19 +2,12 @@
 precision highp int;
 precision highp float;
 
-// uniform highp sampler3D volume;
-// uniform highp sampler2D cubeTex;
 uniform highp sampler3D cubeTex;
 // WebGL doesn't support 1D textures, so we use a 2D texture for the transfer
 // function
 uniform highp sampler2D transferTex;
 uniform ivec3 volume_dims;
-// uniform vec3 starColor;
-// uniform float star_radius;
-// uniform int species;
 uniform float alphaCorrection;
-// uniform float alphaEmph;
-// uniform float alphaSpread;
 uniform float dt_scale;
 
 in vec3 vray_dir;

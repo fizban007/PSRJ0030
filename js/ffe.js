@@ -42,12 +42,10 @@ controls.enableKeys = false;
 
 // var fieldline_txt = new THREE.TextureLoader().load('textures/fieldline.png');
 
-var init_frame = 70;
-var final_frame = 70;
 var Config = function () {
-  this.frame = init_frame;
-  this.prev_frame = init_frame;
-  this.frame_rate = 12.0;
+  // this.frame = init_frame;
+  // this.prev_frame = init_frame;
+  // this.frame_rate = 12.0;
   this.resetView = function() {
     controls.reset();
   };
