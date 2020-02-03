@@ -158,7 +158,7 @@ var start = function() {
   var dir = "data/";
   var txtloader = new THREE.FileLoader();
   txtloader.setResponseType("arraybuffer");
-  txtloader.load(dir + "lambda19.dat", function(content) {
+  txtloader.load(dir + "lambda19_256.dat", function(content) {
     var data = new Uint8Array(content);
     // console.log(data.length);
     var texture = new THREE.DataTexture3D(data, 256, 256, 256);

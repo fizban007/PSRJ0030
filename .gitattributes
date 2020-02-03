@@ -1,3 +1,4 @@
 data/lambda19.dat filter=lfs diff=lfs merge=lfs -text
 data/lines_closed.json filter=lfs diff=lfs merge=lfs -text
 data/lines_open.json filter=lfs diff=lfs merge=lfs -text
+data/lambda19_256.dat filter=lfs diff=lfs merge=lfs -text
