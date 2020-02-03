@@ -33,7 +33,7 @@ var camera = new THREE.PerspectiveCamera(30, width / height, 10.0, 10000);
 // var camera = new THREE.OrthographicCamera(width / -20, width / 20, height / -20, height / 20,
 //                                           0.1, 1000);
 camera.position.z = 0;
-camera.position.y = 80;
+camera.position.y = 160;
 camera.up.set(0, 0, 1);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
