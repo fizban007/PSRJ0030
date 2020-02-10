@@ -73,7 +73,6 @@ var min_length = 50;
 function load_field_lines(file, color, skip) {
   json_loader.load(file, function(content) {
     var line_group = new THREE.Group();
-    console.log(content);
     var response = JSON.parse(content);
     for (var n = 0; n < response.length; n+=skip) {
       var line = make_field_line(response[n], color);
@@ -156,10 +155,9 @@ transTex = updateTransferFunction();
 manager.onLoad = function() { start(); };
 
 var start = function() {
-  var dir = "data/";
   var txtloader = new THREE.FileLoader();
   txtloader.setResponseType("arraybuffer");
-  txtloader.load(dir + "lambda19_256.dat", function(content) {
+  txtloader.load(data_dir + "lambda19_256.dat", function(content) {
     var data = new Uint8Array(content);
     // console.log(data.length);
     var texture = new THREE.DataTexture3D(data, 256, 256, 256);
