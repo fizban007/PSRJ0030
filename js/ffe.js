@@ -67,7 +67,7 @@ closed_lines.visible = conf.show_closed;
 
 var field_lines = [];
 var json_loader = new THREE.FileLoader();
-var data_dir = "data/";
+var data_dir = "../data/";
 var min_length = 50;
 
 function load_field_lines(file, color, skip) {
