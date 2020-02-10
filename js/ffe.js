@@ -73,6 +73,7 @@ var min_length = 50;
 function load_field_lines(file, color, skip) {
   json_loader.load(file, function(content) {
     var line_group = new THREE.Group();
+    console.log(content);
     var response = JSON.parse(content);
     for (var n = 0; n < response.length; n+=skip) {
       var line = make_field_line(response[n], color);
