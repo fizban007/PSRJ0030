@@ -54,10 +54,10 @@ var Config = function () {
   this.alpha_correction = 4.0;
   this.wireframe = false;
   this.color1 = "#000000";
-  this.stepPos1 = 0.15;
-  this.color2 = "#b64000";
-  this.stepPos2 = 0.65;
-  this.color3 = "#25ff00";
+  this.stepPos1 = 0.0;
+  this.color2 = "#b68b00";
+  this.stepPos2 = 0.55;
+  this.color3 = "#00ffe0";
   this.stepPos3 = 0.8;
 };
 var conf = new Config();
