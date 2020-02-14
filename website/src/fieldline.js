@@ -115,14 +115,18 @@ function integrate_field_line(p0, dl, nmax, color1, color2) {
     f.normalize();
     p.addScaledVector(f, dl * sign);
     if (p.lengthSq() < 1.0) {
+      positions.push(p.x, p.y, p.z);
       break;
     }
     if (p.x*p.x+p.y*p.y > conf.LC * conf.LC) {
+      positions.push(p.x, p.y, p.z);
       open = true;
       break;
     }
     // g.vertices.push(p);
-    positions.push(p.x, p.y, p.z);
+    if (i % 5 == 0) {
+      positions.push(p.x, p.y, p.z);
+    }
     len += dl;
   }
   // console.log(positions);

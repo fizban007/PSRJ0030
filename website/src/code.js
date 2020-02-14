@@ -1,11 +1,11 @@
-import * as THREE from '../vendor/three.module.js'
-import { GUI } from '../vendor/dat.gui.module.js';
+import * as THREE from '../node_modules/three/build/three.module.js';
+import { GUI } from '../node_modules/dat.gui/build/dat.gui.module.js';
 // import { TrackballControls } from '../vendor/TrackballControls.js'
-import { OrbitControls } from '../vendor/OrbitControls.js'
-import { Line2 } from '../vendor/lines/Line2.js';
-import { LineMaterial } from '../vendor/lines/LineMaterial.js';
-import { LineGeometry } from '../vendor/lines/LineGeometry.js';
-import { GeometryUtils } from '../vendor/lines/GeometryUtils.js';
+import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
+import { Line2 } from '../node_modules/three/examples/jsm/lines/Line2.js';
+// import * as MeshLine from '../vender/THREE.MeshLine.js';
+import { LineMaterial } from '../node_modules/three/examples/jsm/lines/LineMaterial.js';
+import { LineGeometry } from '../node_modules/three/examples/jsm/lines/LineGeometry.js';
 
 function main() {
   const canvas = document.querySelector('#c');
