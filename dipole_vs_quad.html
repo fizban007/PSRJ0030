@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Pulsar Visualizations</title>
+    <!-- <link rel="stylesheet" type="text/css" href="css/org.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+    <div class="content">
+      <h1 class="title">Dipole and Quadrupole Magnetic Fields for Pulsars</h1>
+      <p>
+        This is an interactive tool to help build intuition on how
+        different components of dipole and quadrupole magnetic fields
+        superimpose near the surface of a pulsar, and how the polar caps
+        change as a result. The default parameters of the dipole and
+        quadrupole fields superimpose to give the final fields in the
+        last panel.
+      </p>
+      <p>
+        Magnetic field lines are color-coded. Green lines are closed field
+        lines and light blue one are open. We define open field lines as
+        those reaching the light cylinder and beyond. One can adjust the
+        size of the light cylinder by changing the parameter
+        <code>LC</code>. Field line integration stops when the
+        cylindrical radius reaches $R_\mathrm{LC}$. All
+        lengths are normalized to stellar radius, so the star always has
+        radius $1$. Not all field lines are shown. This is to improve
+        performance of both rendering and integration. To show more
+        field lines, reduce the
+        <code>min_length</code> parameter.
+      </p>
+      <p>
+        Here are the field lines of an inclined dipole. By default the
+        dipole is inclined in the $yz$ plane. The default view is from
+        the $x$ axis. <code>p0</code> is the overall amplitude of the
+        dipole and <code>theta</code> is the inclination
+        angle. <code>px</code>, <code>py</code>, and <code>pz</code> are
+        the Cartesian components of the dipole, which are used in the
+        code.
+        <div class="container">
+	        <span data-diagram="dipole" class="widget"> </span>
+          <div id="dipole-gui" style="position: absolute; top: 0em; right: 1em; z-index: 1;"></div>
+        </div>
+      </p>
+      <p>
+        Here are the field lines of a pure quadrupole. We adopt the
+        Cartesian quadrupole tensor defined as:
+      </p>
+      <p>
+        \[
+        \mathbf{Q} =
+        \begin{pmatrix}
+        q_{11} & q_{12} & q_{13} \\
+        q_{12} & q_{22} & q_{23} \\
+        q_{13} & q_{23} & -q_{11} - q_{22}
+        \end{pmatrix}
+        \]
+      </p>
+      <p>
+        The quadrupole magnetic field is then defined using a static magnetic potential:
+      </p>
+      <p>
+        \[
+        \mathbf{B}_q = -\nabla\left(\frac{\mathbf{r}\mathbf{Q}\mathbf{r}^T}{r^5}\right) = -\frac{2}{r^5}\mathbf{Q}\mathbf{r} + \frac{5}{r^7}(\mathbf{r}\mathbf{Q}\mathbf{r}^T)\mathbf{r}
+        \]
+      </p>
+      <p>
+        The default view is again from the $x$ axis. For the default
+        parameters, there seems to be a quasi-symmetry axis at about
+        $45^\circ$ inclination, but the field configuration is not
+        completely axisymmetric. An offset is used because we want to
+        reproduce the NICER result in the bottom panel. Without the
+        offset we can't find a match with only dipole and quadrupole
+        moments.
+      </p>
+      <p>
+        <div class="container">
+	        <span data-diagram="quadrupole" class="widget"></span>
+          <div id="quadrupole-gui" style="position: absolute; top: 0em; right: 1em; z-index: 1;"></div>
+        </div>
+      </p>
+      <p>
+        The following is a combination of both dipole and quadrupole
+        fields. By default only open field lines are shown. This set of
+        parameters is chosen so that the polar caps are similar to those
+        found by NICER. These are also the same default parameters in
+        the previous two widgets.
+      </p>
+      <p>
+        <div class="container">
+	        <span data-diagram="pulsar" class="widget"></span>
+          <div id="pulsar-gui" style="position: absolute; top: 0em; right: 1em; z-index: 1;"></div>
+        </div>
+      </p>
+    </div>
+    <script type="module" src="dipole.js"></script>
+  </body>
+</html>
