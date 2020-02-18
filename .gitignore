@@ -1,0 +1,6 @@
+.DS_Store
+.idea
+*.log
+tmp/
+target/
+website/node_modules/

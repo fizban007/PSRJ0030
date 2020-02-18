@@ -1,4 +1,3 @@
-// #![no_std]
 extern crate js_sys;
 extern crate wasm_bindgen;
 
@@ -52,7 +51,7 @@ pub struct Conf {
   q_offset_x: f32,
   q_offset_y: f32,
   q_offset_z: f32,
-  LC: f32,
+  lc: f32,
 }
 
 #[wasm_bindgen]
@@ -71,7 +70,7 @@ impl Conf {
       q_offset_x: params[8],
       q_offset_y: params[9],
       q_offset_z: params[10],
-      LC: params[11],
+      lc: params[11],
     }
   }
 }
@@ -161,7 +160,7 @@ pub fn integrate_field_line(
       pos.extend_from_slice(&[p.x, p.y, p.z]);
       break;
     }
-    if p.x * p.x + p.y * p.y > conf.LC * conf.LC {
+    if p.x * p.x + p.y * p.y > conf.lc * conf.lc {
       pos.extend_from_slice(&[p.x, p.y, p.z]);
       break;
     }
