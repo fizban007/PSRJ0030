@@ -76,7 +76,7 @@ impl Conf {
   }
 }
 
-pub fn dipole_field(px: f32, py: f32, pz: f32, x: f32, y: f32, z: f32) -> Vec3 {
+pub fn dipole_field(px: f32, py: f32, pz: f32, x: f32, y: f32, z: f32) -> Vec3<f32> {
   let r = (x * x + y * y + z * z).sqrt();
   let r5 = r * r * r * r * r;
   Vec3::new(
@@ -95,7 +95,7 @@ pub fn quadrupole_field(
   x: f32,
   y: f32,
   z: f32,
-) -> Vec3 {
+) -> Vec3<f32> {
   let r = (x * x + y * y + z * z).sqrt();
   let r2 = r * r;
   let r7 = r2 * r2 * r2 * r;
@@ -139,7 +139,7 @@ pub fn integrate_field_line(
   // let mut p = dipole_field()
   let mut p = Vec3::new(p0[0], p0[1], p0[2]);
   let mut f = dipole_field(conf.px, conf.py, conf.pz, p.x, p.y, p.z)
-    + quadrupole_field(
+    + &quadrupole_field(
       conf.q11,
       conf.q12,
       conf.q13,
@@ -165,7 +165,7 @@ pub fn integrate_field_line(
       pos.extend_from_slice(&[p.x, p.y, p.z]);
       break;
     }
-    if ((i % skip as u32) == 0) {
+    if (i % skip as u32) == 0 {
       pos.extend_from_slice(&[p.x, p.y, p.z]);
     }
     // pos_array[(i * 3) as usize] = p.x;
@@ -175,7 +175,7 @@ pub fn integrate_field_line(
 
     // console_log!("flen is {}", flen);
     f = dipole_field(conf.px, conf.py, conf.pz, p.x, p.y, p.z)
-      + quadrupole_field(
+      + &quadrupole_field(
         conf.q11,
         conf.q12,
         conf.q13,
