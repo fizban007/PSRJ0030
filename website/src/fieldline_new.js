@@ -56,7 +56,7 @@ var Config = function () {
   this.q_offset_y = 0.0;
   this.q_offset_z = -0.4;
   // this.q_offset_z = 0.0;
-  this.min_length = 15.0;
+  this.seed_radius = 10.0;
   this.LC = 20.0;
   this.show_closed = true;
 };
@@ -66,7 +66,7 @@ var open_lines = new THREE.Group();
 var closed_lines = new THREE.Group();
 closed_lines.visible = conf.show_closed;
 
-var N = 10000;
+var N = 200;
 var p0s = [];
 
 function gen_p0() {
@@ -75,7 +75,9 @@ function gen_p0() {
     var phi = 2.0 * Math.PI * Math.random();
     var u = 2.0 * Math.random() - 1.0;
     var v = Math.sqrt(1.0 - u*u);
-    var p0 = new THREE.Vector3(v * Math.cos(phi), v * Math.sin(phi), u);
+    var p0 = new THREE.Vector3(v * Math.cos(phi),
+                               v * Math.sin(phi),
+                               u);
     p0s.push(p0);
   }
 }
@@ -94,44 +96,47 @@ js.then(js => {
   // js.test_dict(conf, conf.px);
   function integrate_line(p0, dl, nmax, color1, color2) {
     // var positions = new Float32Array(nmax*3);
-    var skip = 5;
-    var positions = js.integrate_field_line(
-      [p0.x, p0.y, p0.z],
+    var positions = js.integrate_field(
+      [conf.seed_radius * p0.x,
+       conf.seed_radius * p0.y,
+       conf.seed_radius * p0.z],
       [conf.px, conf.py, conf.pz, conf.q11, conf.q12, conf.q13,
        conf.q22, conf.q23, conf.q_offset_x, conf.q_offset_y,
-       conf.q_offset_z, conf.LC], dl, nmax, skip);
+       conf.q_offset_z, conf.LC], dl, nmax);
+    // console.log(positions);
       // positions);
     var l = positions.length;
-    if (l * dl / 3.0 >= conf.min_length / skip) {
-      var xlast = positions[l-3];
-      var ylast = positions[l-2];
-      var open = (xlast*xlast + ylast*ylast > conf.LC*conf.LC ? true : false);
-      if (!open) {
-        if (Math.random() < 0.5) return;
-      }
-      var g = new LineGeometry();
+    // if (l * dl / 3.0 >= conf.seed_radius / skip) {
+    // if (l * dl / 3.0 >= conf.seed_radius) {
+    var xlast = positions[l-3];
+    var ylast = positions[l-2];
+    var xfirst = positions[0];
+    var yfirst = positions[1];
+    var open = (xlast*xlast + ylast*ylast > conf.LC*conf.LC ||
+                xfirst*xfirst + yfirst*yfirst > conf.LC*conf.LC ? true : false);
+    var g = new LineGeometry();
 
-      // g.setPositions(positions.slice(0,num));
-      g.setPositions(positions);
-      g.attributes.position.needsUpdate = true;
-      var line = new Line2(g, new LineMaterial({
-        color: (open ? color1 : color2),
-        linewidth: 0.002,
-        transparent: true,
-      }));
-      line.computeLineDistances();
-      line.name = "line";
-      if (open)
-        open_lines.add(line);
-      else
-        closed_lines.add(line);
+    // g.setPositions(positions.slice(0,num));
+    g.setPositions(positions);
+    g.attributes.position.needsUpdate = true;
+    var line = new Line2(g, new LineMaterial({
+      color: (open ? color1 : color2),
+      linewidth: 0.002,
+      transparent: true,
+    }));
+    line.computeLineDistances();
+    line.name = "line";
+    if (open)
+      open_lines.add(line);
+    else
+      closed_lines.add(line);
     // line.scale.set( 1, 1, 1 ); // arc.computeLineDistances();
-    }
+    // }
   }
 
   function add_all_field_lines() {
     for (var i = 0; i < p0s.length; i++) {
-      integrate_line(p0s[i], 0.05, 2000, new THREE.Color("skyblue"),
+      integrate_line(p0s[i], 0.2, 400, new THREE.Color("skyblue"),
                      new THREE.Color("limegreen"));
       // console.log("adding", i, line);
     }
@@ -224,7 +229,7 @@ js.then(js => {
   f_quad.add(conf, "q_offset_y", -1.0, 1.0, 0.01).onChange(update_fieldlines);
   f_quad.add(conf, "q_offset_z", -1.0, 1.0, 0.01).onChange(update_fieldlines);
 
-  gui.add(conf, "min_length", 1.0, 40.0, 0.01).onChange(update_fieldlines);
+  gui.add(conf, "seed_radius", 1.0, 40.0, 0.01).onChange(update_fieldlines);
   gui.add(conf, "LC", 10.0, 30.0, 0.01).onChange(update_fieldlines);
   gui.add(conf, "show_closed");
   conf.clear = function() {
@@ -332,7 +337,7 @@ js.then(js => {
 //     len += dl;
 //   }
 //   // console.log(positions);
-//   if (len >= conf.min_length) {
+//   if (len >= conf.seed_radius) {
 //     g.setPositions(positions);
 //     g.attributes.position.needsUpdate = true;
 //     var line = new Line2(g, new LineMaterial({
