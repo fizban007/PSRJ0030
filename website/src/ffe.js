@@ -49,7 +49,7 @@ var Config = function () {
   this.resetView = function() {
     controls.reset();
   };
-  this.current_sheet = true;
+  this.current_sheet = false;
   this.playing = false;
   this.alpha_correction = 4.0;
   this.wireframe = false;
